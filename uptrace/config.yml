@@ -1,0 +1,130 @@
+##
+## Uptrace on Railway.
+##
+## Every value that varies per deploy is an environment variable — Uptrace
+## expands ${VAR} and ${VAR:default} in this file itself, so there is no
+## entrypoint script and nothing is templated at build time.
+##
+## This matches the schema of the 2.0.3 binary (`uptrace config create`),
+## which differs from config/uptrace.dist.yml in the GitHub repo — that file
+## tracks the 2.1 betas. Regenerate it before bumping the base image.
+##
+
+service:
+  env: hosted
+  secret: '${UPTRACE_SECRET}'
+
+site:
+  url: '${UPTRACE_SITE_URL}'
+
+listen:
+  # OTLP/HTTP *and* the REST API and Vue UI share this port. Railway's public
+  # domain points here.
+  http:
+    addr: ':${PORT}'
+
+  # OTLP/gRPC. Reachable over the private network only — Railway routes one
+  # public port per service and that one is HTTP. See the README.
+  grpc:
+    addr: ':4317'
+
+# Created on first startup only: update/delete are off so that redeploying
+# never reconciles away a password or token you changed in the UI.
+seed_data:
+  update: false
+  delete: false
+
+  users:
+    - key: user1
+      name: Admin
+      email: '${UPTRACE_ADMIN_EMAIL}'
+      password: '${UPTRACE_ADMIN_PASSWORD}'
+      email_confirmed: true
+
+  orgs:
+    - key: org1
+      name: '${UPTRACE_ORG_NAME:My Org}'
+
+  org_users:
+    - key: org_user1
+      org_key: org1
+      user_key: user1
+      role: owner
+
+  projects:
+    - key: project1
+      name: '${UPTRACE_PROJECT_NAME:My Project}'
+      org_key: org1
+
+  # Seeding the token means the DSN is known before first login — it is
+  # surfaced as UPTRACE_DSN on the service so you can paste it straight
+  # into an SDK.
+  project_tokens:
+    - key: project_token1
+      project_key: project1
+      token: '${UPTRACE_PROJECT_TOKEN}'
+
+  project_users:
+    - key: project_user1
+      project_key: project1
+      org_user_key: org_user1
+      perm_level: admin
+
+ch_cluster:
+  cluster: uptrace1
+  replicated: false
+  distributed: false
+
+  shards:
+    - replicas:
+        - addr: '${CLICKHOUSE_ADDR}'
+          database: '${CLICKHOUSE_DB}'
+          user: '${CLICKHOUSE_USER}'
+          password: '${CLICKHOUSE_PASSWORD}'
+
+          dial_timeout: 3s
+          write_timeout: 5s
+          max_retries: 3
+          max_execution_time: 15s
+
+pg:
+  addr: '${POSTGRES_ADDR}'
+  user: '${POSTGRES_USER}'
+  password: '${POSTGRES_PASSWORD}'
+  database: '${POSTGRES_DB}'
+
+ch_schema:
+  compression: ZSTD(1)
+
+redis_cache:
+  addrs:
+    1: '${REDIS_ADDR}'
+  username: ''
+  password: '${REDIS_PASSWORD}'
+  db: 0
+
+certmagic:
+  # Railway terminates TLS at the edge. Never turn this on here.
+  enabled: false
+
+mailer:
+  smtp:
+    # Alert emails and password resets. Fill the UPTRACE_SMTP_* variables and
+    # set UPTRACE_SMTP_ENABLED=true.
+    enabled: ${UPTRACE_SMTP_ENABLED:false}
+    host: '${UPTRACE_SMTP_HOST:localhost}'
+    port: ${UPTRACE_SMTP_PORT:587}
+    username: '${UPTRACE_SMTP_USERNAME:}'
+    password: '${UPTRACE_SMTP_PASSWORD:}'
+    from: '${UPTRACE_SMTP_FROM:no-reply@uptrace.local}'
+
+self_monitoring:
+  # Off by default: an *idle* instance emits ~900 spans/minute of its own
+  # Redis and Postgres chatter, which is ~1.3M spans/day of ClickHouse disk
+  # you pay for and a seeded project full of noise instead of your app.
+  # Set UPTRACE_SELF_MONITORING_DISABLED=false to trace Uptrace with itself.
+  disabled: ${UPTRACE_SELF_MONITORING_DISABLED:true}
+  dsn: 'http://${UPTRACE_PROJECT_TOKEN}@127.0.0.1:${PORT}?grpc=4317'
+
+logging:
+  level: '${UPTRACE_LOG_LEVEL:INFO}'

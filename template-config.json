@@ -1,0 +1,189 @@
+{
+  "buckets": {},
+  "services": {
+    "2883108f-5d5b-4708-9a8a-d0ce2d95efd4": {
+      "icon": "https://devicons.railway.app/i/clickhouse.svg",
+      "name": "clickhouse",
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": null,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "repo": "https://github.com/nomideusz/uptrace-railway",
+        "rootDirectory": "/clickhouse"
+      },
+      "variables": {
+        "CLICKHOUSE_PASSWORD": {
+          "isOptional": false,
+          "description": "Auto-generated telemetry database password.",
+          "defaultValue": "${{secret(32)}}"
+        }
+      },
+      "volumeMounts": {
+        "2883108f-5d5b-4708-9a8a-d0ce2d95efd4": {
+          "mountPath": "/var/lib/clickhouse"
+        }
+      }
+    },
+    "e7996a84-1f0a-4e5f-be8c-a47c81eb94da": {
+      "icon": "https://devicons.railway.app/i/postgresql.svg",
+      "name": "postgres",
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": null,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "repo": "https://github.com/nomideusz/uptrace-railway",
+        "rootDirectory": "/postgres"
+      },
+      "variables": {
+        "POSTGRES_PASSWORD": {
+          "isOptional": false,
+          "description": "Auto-generated metadata database password.",
+          "defaultValue": "${{secret(32)}}"
+        }
+      },
+      "volumeMounts": {
+        "e7996a84-1f0a-4e5f-be8c-a47c81eb94da": {
+          "mountPath": "/var/lib/postgresql/data"
+        }
+      }
+    },
+    "66d575d2-cacc-4108-858f-a164afa84e3d": {
+      "icon": "https://devicons.railway.app/i/redis.svg",
+      "name": "redis",
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": null,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "repo": "https://github.com/nomideusz/uptrace-railway",
+        "rootDirectory": "/redis"
+      },
+      "variables": {
+        "REDIS_PASSWORD": {
+          "isOptional": false,
+          "description": "Auto-generated cache password.",
+          "defaultValue": "${{secret(32)}}"
+        }
+      }
+    },
+    "5ed3f127-8e41-4ceb-9535-f1ed032925f0": {
+      "icon": "https://devicons.railway.app/i/uptrace.svg",
+      "name": "uptrace",
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": "/",
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "repo": "https://github.com/nomideusz/uptrace-railway",
+        "rootDirectory": "/uptrace"
+      },
+      "variables": {
+        "PORT": {
+          "isOptional": false,
+          "description": "Port serving the UI and OTLP/HTTP ingest. Railway routes here. Don't change.",
+          "defaultValue": "8080"
+        },
+        "UPTRACE_SITE_URL": {
+          "isOptional": false,
+          "description": "Public base URL, wired to your Railway domain. Don't change.",
+          "defaultValue": "https://${{RAILWAY_PUBLIC_DOMAIN}}"
+        },
+        "UPTRACE_SECRET": {
+          "isOptional": false,
+          "description": "Auto-generated key for signing sessions and tokens.",
+          "defaultValue": "${{secret(32)}}"
+        },
+        "UPTRACE_ADMIN_EMAIL": {
+          "isOptional": false,
+          "description": "Your login email. The admin account is created on first boot only.",
+          "defaultValue": "admin@example.com"
+        },
+        "UPTRACE_ADMIN_PASSWORD": {
+          "isOptional": false,
+          "description": "Auto-generated login password. Copy it from here to sign in, then change it in the UI.",
+          "defaultValue": "${{secret(24)}}"
+        },
+        "UPTRACE_PROJECT_TOKEN": {
+          "isOptional": false,
+          "description": "Ingest token for the seeded project. Your DSN is https://<this token>@<your domain>.",
+          "defaultValue": "${{secret(32)}}"
+        },
+        "CLICKHOUSE_ADDR": {
+          "isOptional": false,
+          "description": "ClickHouse native address. Wired automatically — don't change.",
+          "defaultValue": "${{clickhouse.RAILWAY_PRIVATE_DOMAIN}}:9000"
+        },
+        "CLICKHOUSE_DB": {
+          "isOptional": false,
+          "description": "ClickHouse database. Must match the clickhouse service — don't change.",
+          "defaultValue": "uptrace"
+        },
+        "CLICKHOUSE_USER": {
+          "isOptional": false,
+          "description": "ClickHouse user. Must match the clickhouse service — don't change.",
+          "defaultValue": "uptrace"
+        },
+        "CLICKHOUSE_PASSWORD": {
+          "isOptional": false,
+          "description": "ClickHouse password. Wired automatically — don't change.",
+          "defaultValue": "${{clickhouse.CLICKHOUSE_PASSWORD}}"
+        },
+        "POSTGRES_ADDR": {
+          "isOptional": false,
+          "description": "Postgres address. Wired automatically — don't change.",
+          "defaultValue": "${{postgres.RAILWAY_PRIVATE_DOMAIN}}:5432"
+        },
+        "POSTGRES_DB": {
+          "isOptional": false,
+          "description": "Postgres database. Must match the postgres service — don't change.",
+          "defaultValue": "uptrace"
+        },
+        "POSTGRES_USER": {
+          "isOptional": false,
+          "description": "Postgres user. Must match the postgres service — don't change.",
+          "defaultValue": "uptrace"
+        },
+        "POSTGRES_PASSWORD": {
+          "isOptional": false,
+          "description": "Postgres password. Wired automatically — don't change.",
+          "defaultValue": "${{postgres.POSTGRES_PASSWORD}}"
+        },
+        "REDIS_ADDR": {
+          "isOptional": false,
+          "description": "Redis address. Wired automatically — don't change.",
+          "defaultValue": "${{redis.RAILWAY_PRIVATE_DOMAIN}}:6379"
+        },
+        "REDIS_PASSWORD": {
+          "isOptional": false,
+          "description": "Redis password. Wired automatically — don't change.",
+          "defaultValue": "${{redis.REDIS_PASSWORD}}"
+        },
+        "UPTRACE_SELF_MONITORING_DISABLED": {
+          "isOptional": true,
+          "description": "Uptrace tracing itself. Off because an idle instance writes ~1.3M spans/day. Set false to enable.",
+          "defaultValue": "true"
+        },
+        "RAILWAY_HEALTHCHECK_TIMEOUT_SEC": {
+          "isOptional": false,
+          "description": "Grace period for the first boot to run migrations and answer the healthcheck.",
+          "defaultValue": "600"
+        }
+      },
+      "networking": {
+        "serviceDomains": {
+          "<hasDomain>": {}
+        }
+      }
+    }
+  }
+}
