@@ -48,6 +48,7 @@ The whole configuration is one `config.yml` baked into a thin wrapper image, and
 - **Self-monitoring is off.** Uptrace can trace itself, but an *idle* instance emits roughly 900 spans a minute of its own Redis and Postgres chatter — about 1.3M spans a day of storage you pay for, in the same project as your app's data. Set `UPTRACE_SELF_MONITORING_DISABLED=false` if you want it anyway.
 - **Give ClickHouse room.** It is the memory-hungry service here; if queries get killed or ingest stalls, that is the service to scale, not `uptrace`.
 - **The first boot runs migrations** against both databases before the healthcheck can pass, which is why `RAILWAY_HEALTHCHECK_TIMEOUT_SEC` is set to 600. Leave it.
+- **Only the `uptrace` service has a healthcheck, by design.** Railway runs healthchecks against services with a public domain and requires a 2xx from the routed port; on internal-only services like ClickHouse, Postgres, and Redis the setting is accepted and never executed, so adding one there buys nothing. Note also that Uptrace serves its SPA for any unmatched path, so the healthcheck proves the HTTP server is up but not that ClickHouse is reachable — watch the logs, not the green check, when ingest looks wrong.
 
 ## Why Deploy Uptrace on Railway?
 
