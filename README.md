@@ -1,6 +1,6 @@
 # Deploy and Host Uptrace on Railway
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/uptrace?utm_medium=integration&utm_source=button&utm_campaign=uptrace)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/uptrace?referralCode=sLjDXb&utm_medium=integration&utm_source=button&utm_campaign=uptrace)
 
 [Uptrace](https://uptrace.dev/) is an open-source APM built on OpenTelemetry and ClickHouse. It ingests traces, logs, and metrics through the standard OTLP protocol, stores them in a column store built for the job, and gives you distributed tracing, a service graph, dashboards, and alerting behind one UI — no per-seat pricing and no data leaving your Railway project.
 
