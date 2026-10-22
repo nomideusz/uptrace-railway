@@ -30,7 +30,7 @@ The whole configuration is one `config.yml` baked into a thin wrapper image, and
 
 - [Uptrace documentation](https://uptrace.dev/get)
 - [Uptrace source](https://github.com/uptrace/uptrace)
-- [Template source on GitHub](https://github.com/nomideusz/uptrace-railway)
+- [Template source on GitHub](https://github.com/two-workspaces/uptrace)
 - [OpenTelemetry OTLP exporter docs](https://opentelemetry.io/docs/specs/otlp/)
 
 ### Implementation Details
@@ -38,8 +38,8 @@ The whole configuration is one `config.yml` baked into a thin wrapper image, and
 **Four services from one repo: `uptrace/` wraps the official `uptrace/uptrace:2.0.3` image with a config file, and `clickhouse/`, `postgres/`, and `redis/` are three-line Dockerfiles over the official images.**
 
 1. Deploy, then open the generated domain. Sign in with `UPTRACE_ADMIN_EMAIL` and the generated `UPTRACE_ADMIN_PASSWORD`, both on the `uptrace` service. Change the password in the UI afterwards — the seeded account is created on first boot only, and editing the variable later does nothing.
-2. Point your app at the DSN `https://<UPTRACE_PROJECT_TOKEN>@<your-railway-domain>`, taking the token from the `uptrace` service's variables. It is seeded into the config, so it works before you ever log in. For apps inside the same Railway project, use `http://<token>@${{uptrace.RAILWAY_PRIVATE_DOMAIN}}:8080` and keep the traffic off the public internet.
-3. Any OpenTelemetry SDK works without an Uptrace-specific library: set `OTEL_EXPORTER_OTLP_ENDPOINT` to `https://<your-railway-domain>`, `OTEL_EXPORTER_OTLP_PROTOCOL` to `http/protobuf`, and `OTEL_EXPORTER_OTLP_HEADERS` to `uptrace-dsn=<your DSN>`.
+2. Point your app at the DSN `https://UPTRACE_PROJECT_TOKEN@YOUR-RAILWAY-DOMAIN`, taking the token from the `uptrace` service's variables. It is seeded into the config, so it works before you ever log in. For apps inside the same Railway project, use `http://TOKEN@${{uptrace.RAILWAY_PRIVATE_DOMAIN}}:8080` and keep the traffic off the public internet.
+3. Any OpenTelemetry SDK works without an Uptrace-specific library: set `OTEL_EXPORTER_OTLP_ENDPOINT` to `https://YOUR-RAILWAY-DOMAIN`, `OTEL_EXPORTER_OTLP_PROTOCOL` to `http/protobuf`, and `OTEL_EXPORTER_OTLP_HEADERS` to `uptrace-dsn=<your DSN>`.
 4. Alert emails and password resets need SMTP. Set `UPTRACE_SMTP_ENABLED=true` on the `uptrace` service along with `UPTRACE_SMTP_HOST`, `UPTRACE_SMTP_PORT`, `UPTRACE_SMTP_USERNAME`, `UPTRACE_SMTP_PASSWORD`, and `UPTRACE_SMTP_FROM`.
 
 **Things worth knowing before you deploy:**

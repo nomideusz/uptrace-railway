@@ -11,7 +11,7 @@
         "restartPolicyMaxRetries": 10
       },
       "source": {
-        "repo": "https://github.com/nomideusz/uptrace-railway",
+        "repo": "https://github.com/two-workspaces/uptrace",
         "rootDirectory": "/clickhouse"
       },
       "variables": {
@@ -37,7 +37,7 @@
         "restartPolicyMaxRetries": 10
       },
       "source": {
-        "repo": "https://github.com/nomideusz/uptrace-railway",
+        "repo": "https://github.com/two-workspaces/uptrace",
         "rootDirectory": "/postgres"
       },
       "variables": {
@@ -63,7 +63,7 @@
         "restartPolicyMaxRetries": 10
       },
       "source": {
-        "repo": "https://github.com/nomideusz/uptrace-railway",
+        "repo": "https://github.com/two-workspaces/uptrace",
         "rootDirectory": "/redis"
       },
       "variables": {
@@ -84,7 +84,7 @@
         "restartPolicyMaxRetries": 10
       },
       "source": {
-        "repo": "https://github.com/nomideusz/uptrace-railway",
+        "repo": "https://github.com/two-workspaces/uptrace",
         "rootDirectory": "/uptrace"
       },
       "variables": {

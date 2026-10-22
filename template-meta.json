@@ -3,5 +3,6 @@
   "name": "Uptrace",
   "description": "OpenTelemetry APM on ClickHouse: traces, logs, metrics, alerts.",
   "category": "Observability",
-  "image": "https://devicons.railway.app/i/uptrace.svg"
+  "image": "https://devicons.railway.app/i/uptrace.svg",
+  "published": true
 }
